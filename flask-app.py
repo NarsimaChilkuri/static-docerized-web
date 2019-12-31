@@ -32,6 +32,7 @@ def create_table():
        commit_message = response_json["commits"][0]["message"]
        timestamp = response_json["commits"][0]["timestamp"]
        image_tag = "74744556/static-web-page:{}".format(commit_id)
+       client = docker.from_env()
        client.images.build(path="/home/narsimac/static-web-container/",tag=image_tag)
        client.images.push("74744556/static-web-page",commit_id)
        client.containers.run(image_tag, detach=True)
