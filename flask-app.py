@@ -50,7 +50,7 @@ def create_table():
           os.system(cmd_stop)
           print "---------------- Stopped all previous containers ----------------------"
 
-          cmd_remove = "docker rm $(docker ps -q --filter ancestor=74744556/static-web-page:{})".format(tag)
+          cmd_remove = "docker rm $(docker ps -a -q --filter ancestor=74744556/static-web-page:{})".format(tag)
           os.system(cmd_remove)
           print "---------------- Removed all previous containers ----------------------"
 
@@ -58,11 +58,13 @@ def create_table():
           # client.images.remove(image_name)
           # print "----------------Stopped all previous images ----------------------"
           
-
+       cmd_remove_images ="docker rmi $(docker images -q 74744556/static-web-page*)"
+       print "---------------- Removed all previous images ----------------------"
+       os.system(cmd_remove_images)
        client.images.build(path="/home/narsimac/static-web-container/",tag=image_tag)
        client.images.push("74744556/static-web-page",commit_id)
        
-       
+
 
        print commit_id
        print user_name
