@@ -35,7 +35,6 @@ def create_table():
        cursor.execute("select count(*) from git_log")
        rowcount = cursor.fetchone()[0] + 1
 
-
        
        if rowcount > 0:
         cursor.execute("select commit_hash from git_log")
