@@ -17,8 +17,6 @@ port = 5001
 @app.route("/github-data",methods=['GET','POST'])
 def create_table():
     global port
-   
-
     if request.headers['Content-Type'] == 'application/json':
        response_str = json.dumps(request.json)
        response_json = json.loads(response_str)
