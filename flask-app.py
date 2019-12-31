@@ -29,14 +29,10 @@ def create_table():
        files_modified = response_json["commits"][0]["modified"]
        commit_message = response_json["commits"][0]["message"]
        timestamp = response_json["commits"][0]["timestamp"]
-       port_query = "SELECT port FROM git_log"
-       cursor.execute(port_query)
-       ports_list = list(cursor.fetchall())
        image_tag = "74744556/static-web-page:{}".format(commit_id)
        client = docker.from_env()
        client.images.build(path="/home/narsimac/static-web-container/",tag=image_tag)
        client.images.push("74744556/static-web-page",commit_id)
-       client.containers.run(image_tag, detach=True,ports={'80/tcp': ports_list})
        print commit_id
        print user_name
        print user_email
@@ -72,7 +68,11 @@ def create_table():
        for row in hosts:
            f.write("127.0.0.1        %s\n" % row)
        f.close()
-
+       port_query = "SELECT port FROM git_log"
+       cursor.execute(port_query)
+       ports_list = list(cursor.fetchall())
+       container = client.containers.run(image_tag, detach=True,ports={'80/tcp': ports_list})
+       print container.logs()
        return "Successfully Done"
 
 def listToString(s):  
