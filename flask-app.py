@@ -34,7 +34,7 @@ def create_table():
        domain=domain_generator()
        cursor.execute("select count(*) from git_log")
        rowcount = cursor.fetchone()[0] + 1
-
+       client = docker.from_env()
        
        if rowcount > 0:
         cursor.execute("select commit_hash from git_log")
@@ -50,7 +50,6 @@ def create_table():
         
        
 
-       client = docker.from_env()
        client.images.build(path="/home/narsimac/static-web-container/",tag=image_tag)
        client.images.push("74744556/static-web-page",commit_id)
        
