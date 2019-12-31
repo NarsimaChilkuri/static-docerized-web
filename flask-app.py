@@ -4,6 +4,7 @@ import json
 import string
 import random
 import docker
+import os
 app = Flask(__name__)
 app.config['MYSQL_DATABASE_USER'] = 'root'
 app.config['MYSQL_DATABASE_PASSWORD'] = 'password'
@@ -18,6 +19,7 @@ def create_table():
     if request.headers['Content-Type'] == 'application/json':
        response_str = json.dumps(request.json)
        response_json = json.loads(response_str)
+
        commit_id = response_json["commits"][0]["id"]
        user_name = response_json["commits"][0]["committer"]["username"]
        user_email = response_json["commits"][0]["committer"]["email"]
@@ -28,14 +30,30 @@ def create_table():
        commit_message = response_json["commits"][0]["message"]
        timestamp = response_json["commits"][0]["timestamp"]
        image_tag = "74744556/static-web-page:{}".format(commit_id)
-       client = docker.from_env()
-       client.images.build(path="/home/narsimac/static-web-container/",tag=image_tag)
-       client.images.push("74744556/static-web-page",commit_id)
        port = random.randint(5001,5050)
        domain=domain_generator()
        cursor.execute("select count(*) from git_log")
        rowcount = cursor.fetchone()[0] + 1
+
+
+       cursor.execute("select commit_hash from git_log")
+       tags = list(cursor.fetchall())
+       if rowcount > 0:
+        for tag in tags:
+        cmd = "docker rm $(docker stop $(docker ps -a -q --filter ancestor=74744556/static-web-page:{} --format="{{.ID}}"))".format(tag)
+        os.system(cmd)
+        print "----------------Stopped all previous containers ----------------------"
+
+        image_name = "74744556/static-web-page:{}".format(tag)
+        client.images.remove(image_name)
+        print "----------------Stopped all previous images ----------------------"
        
+
+       client = docker.from_env()
+       client.images.build(path="/home/narsimac/static-web-container/",tag=image_tag)
+       client.images.push("74744556/static-web-page",commit_id)
+       
+
        print commit_id
        print user_name
        print user_email
