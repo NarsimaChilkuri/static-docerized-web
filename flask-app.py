@@ -49,7 +49,6 @@ def create_table():
           # client.images.remove(image_name)
           # print "----------------Stopped all previous images ----------------------"
         
-       
 
        client.images.build(path="/home/narsimac/static-web-container/",tag=image_tag)
        client.images.push("74744556/static-web-page",commit_id)
