@@ -40,7 +40,7 @@ def create_table():
         cursor.execute("select commit_hash from git_log")
         tags = list(cursor.fetchall())
         for tag in tags:
-          cmd = "docker ps -q --filter ancestor=74744556/static-web-page:{} | xargs -r docker stop".format(tag)
+          cmd = "docker stop $(docker ps -q --filter ancestor=74744556/static-web-page:{})".format(tag)
           os.system(cmd)
           print "----------------Stopped all previous containers ----------------------"
 
