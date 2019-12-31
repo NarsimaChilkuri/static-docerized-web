@@ -40,13 +40,13 @@ def create_table():
         cursor.execute("select commit_hash from git_log")
         tags = list(cursor.fetchall())
         for tag in tags:
-          cmd = "docker rm $(docker stop $(docker ps -a -q --filter ancestor=74744556/static-web-page:{}))".format(tag)
+          cmd = "docker ps -q --filter ancestor=74744556/static-web-page:{} | xargs -r docker stop".format(tag)
           os.system(cmd)
           print "----------------Stopped all previous containers ----------------------"
 
-          image_name = "74744556/static-web-page:{}".format(tag)
-          client.images.remove(image_name)
-          print "----------------Stopped all previous images ----------------------"
+          # image_name = "74744556/static-web-page:{}".format(tag)
+          # client.images.remove(image_name)
+          # print "----------------Stopped all previous images ----------------------"
         
        
 
