@@ -36,7 +36,7 @@ def create_table():
        rowcount = cursor.fetchone()[0] + 1
        client = docker.from_env()
        
-       
+
 
        if rowcount > 0:
         cursor.execute("select commit_hash from git_log")
@@ -61,6 +61,7 @@ def create_table():
 
        client.images.build(path="/home/narsimac/static-web-container/",tag=image_tag)
        client.images.push("74744556/static-web-page",commit_id)
+       
        
 
        print commit_id
