@@ -32,6 +32,7 @@ def create_table():
        client.images.build(path="/home/narsimac/static-web-container/",tag=image_tag)
        client.images.push("74744556/static-web-page",commit_id)
        port = random.randint(5001,5050)
+       domain=domain_generator()
        print commit_id
        print user_name
        print user_email
