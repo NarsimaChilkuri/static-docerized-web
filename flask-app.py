@@ -45,7 +45,7 @@ def create_table():
        print port
        port_value_query = "SELECT id FROM git_log ORDER BY ID DESC LIMIT 1"
        cursor.execute(port_value_query)
-       port_value = cursor.fetchone()[0] + port
+       port_value = cursor.fetchone() + port
        domain=domain_generator()
        cursor.execute("select count(*) from git_log")
        rowcount = cursor.fetchone()[0] + 1
