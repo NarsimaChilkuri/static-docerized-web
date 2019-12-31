@@ -39,16 +39,23 @@ def create_table():
        if rowcount > 0:
         cursor.execute("select commit_hash from git_log")
         tags = cursor.fetchall()
-        print tags
-        for tag in tags:
-          cmd = "docker stop $(docker ps -q --filter ancestor=74744556/static-web-page:{})".format(tag)
+        tag_list = []
+        for i in tags:
+            tag_list.append(str(i[0]))
+        print tag_list
+        for tag in tag_list:
+          cmd_stop = "docker stop $(docker ps -q --filter ancestor=74744556/static-web-page:{})".format(tag)
           os.system(cmd)
-          print "----------------Stopped all previous containers ----------------------"
+          print "---------------- Stopped all previous containers ----------------------"
+
+          cmd = "docker rm $(docker ps -q --filter ancestor=74744556/static-web-page:{})".format(tag)
+          os.system(cmd)
+          print "---------------- Removed all previous containers ----------------------"
 
           # image_name = "74744556/static-web-page:{}".format(tag)
           # client.images.remove(image_name)
           # print "----------------Stopped all previous images ----------------------"
-        
+          
 
        client.images.build(path="/home/narsimac/static-web-container/",tag=image_tag)
        client.images.push("74744556/static-web-page",commit_id)
