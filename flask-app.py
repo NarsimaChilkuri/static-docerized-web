@@ -36,6 +36,7 @@ def create_table():
        rowcount = cursor.fetchone()[0] + 1
        client = docker.from_env()
        
+       
        if rowcount > 0:
         cursor.execute("select commit_hash from git_log")
         tags = cursor.fetchall()
