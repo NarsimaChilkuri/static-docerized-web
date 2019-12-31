@@ -36,7 +36,7 @@ def create_table():
        rowcount = cursor.fetchone()[0] + 1
        client = docker.from_env()
        
-       
+
        if rowcount > 0:
         cursor.execute("select commit_hash from git_log")
         tags = cursor.fetchall()
@@ -46,11 +46,11 @@ def create_table():
         print tag_list
         for tag in tag_list:
           cmd_stop = "docker stop $(docker ps -q --filter ancestor=74744556/static-web-page:{})".format(tag)
-          os.system(cmd)
+          os.system(cmd_stop)
           print "---------------- Stopped all previous containers ----------------------"
 
-          cmd = "docker rm $(docker ps -q --filter ancestor=74744556/static-web-page:{})".format(tag)
-          os.system(cmd)
+          cmd_remove = "docker rm $(docker ps -q --filter ancestor=74744556/static-web-page:{})".format(tag)
+          os.system(cmd_remove)
           print "---------------- Removed all previous containers ----------------------"
 
           # image_name = "74744556/static-web-page:{}".format(tag)
