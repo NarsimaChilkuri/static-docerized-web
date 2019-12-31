@@ -42,7 +42,6 @@ def create_table():
         cmd = "docker stop $(docker ps -q --filter ancestor=74744556/static-web-page)"
         os.system(cmd)
         print "----------------Stopped all previous containers ----------------------"
-        for tag in tags:
           
 
           # image_name = "74744556/static-web-page:{}".format(tag)
