@@ -62,7 +62,9 @@ def create_table():
        print "---------------- Removed all previous images ----------------------"
        os.system(cmd_remove_images)
        client.images.build(path="/home/narsimac/static-web-container/",tag=image_tag)
+       print "---------------- Image has Successfully built ---------------------"
        client.images.push("74744556/static-web-page",commit_id)
+       print "---------------- Image has Successfully pushed ---------------------"
        
 
 
@@ -80,6 +82,7 @@ def create_table():
        query = "INSERT INTO git_log (user_email, user_name, branch_name, commit_hash, domain_name,port,files_added,files_modified,files_removed,commit_message,timestamp) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
        values = (user_email,user_name,branch,commit_id,domain,port,listToString(files_added),listToString(files_modified),listToString(files_removed),commit_message,timestamp)
        cursor.execute(query,values)
+       print "---------------- Pushed to DB ---------------------"
        if rowcount > 3:
           delete_query = "DELETE FROM git_log LIMIT 1"
           cursor.execute(delete_query)
