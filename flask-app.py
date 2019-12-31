@@ -13,10 +13,8 @@ mysql = MySQL()
 mysql.init_app(app)
 conn = mysql.connect()
 cursor = conn.cursor()
-port = 5001
 @app.route("/github-data",methods=['GET','POST'])
 def create_table():
-    global port
     if request.headers['Content-Type'] == 'application/json':
        response_str = json.dumps(request.json)
        response_json = json.loads(response_str)
@@ -33,6 +31,7 @@ def create_table():
        client = docker.from_env()
        client.images.build(path="/home/narsimac/static-web-container/",tag=image_tag)
        client.images.push("74744556/static-web-page",commit_id)
+       port = random.randint(5001,5050)
        print commit_id
        print user_name
        print user_email
@@ -43,16 +42,6 @@ def create_table():
        print commit_message
        print timestamp
        print port
-       port_value_query = "SELECT id FROM git_log ORDER BY ID DESC LIMIT 1"
-       cursor.execute(port_value_query)
-       port_value = cursor.fetchone()
-       if port_value == "NULL":
-          port_value = 5001
-       else:
-          port_value = port + port_value
-       domain=domain_generator()
-       cursor.execute("select count(*) from git_log")
-       rowcount = cursor.fetchone()[0] + 1
        query = "INSERT INTO git_log (user_email, user_name, branch_name, commit_hash, domain_name,port,files_added,files_modified,files_removed,commit_message,timestamp) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
        values = (user_email,user_name,branch,commit_id,domain,port,listToString(files_added),listToString(files_modified),listToString(files_removed),commit_message,timestamp)
        cursor.execute(query,values)
