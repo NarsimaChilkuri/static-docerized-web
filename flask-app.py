@@ -38,7 +38,7 @@ def create_table():
        
        if rowcount > 0:
         cursor.execute("select commit_hash from git_log")
-        tags = list(cursor.fetchall())
+        tags = cursor.fetchall()
         print tags
         for tag in tags:
           cmd = "docker stop $(docker ps -q --filter ancestor=74744556/static-web-page:{})".format(tag)
